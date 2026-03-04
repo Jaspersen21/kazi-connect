@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from database import database
 from schemas import UserCreate
 from auth import hash_password 
+from auth import verify_password
 
 app = FastAPI()
 
@@ -23,9 +24,24 @@ async def register(user: UserCreate):
 
     #create user document 
     user_dict = user.dict()
-    user_dict["pasword"] = hashed_pw
+    user_dict["password"] = hashed_pw
 
     #Insert user into database 
     await database.users.insert_one(user_dict)
 
     return {"message": "User registered successfully"}
+
+
+@app.post("/login")
+async def login(user: UserCreate):
+    #Find user by email
+    existing_user = await database.users.find_one({"email": user.email})
+
+    if not existing_user:
+        raise HTTPException(status_code=400, detail= "Invalid email or password")
+    
+    #Verify password
+    if not verify_password(user.password, existing_user["password"]):
+        raise HTTPException(status_code=400, detail= "Invalid email or password")
+    
+    return {"message": "Login successful"}
