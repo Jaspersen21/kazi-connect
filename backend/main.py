@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from database import database
-from schemas import UserCreate
+from schemas import UserCreate, UserLogin, UserOut
 from auth import hash_password 
 from auth import verify_password
 
@@ -35,7 +35,7 @@ async def register(user: UserCreate):
 
 
 @app.post("/login")
-async def login(user: UserCreate):
+async def login(user: UserLogin):
     #Find user by email
     existing_user = await database.users.find_one({"email": user.email})
 
