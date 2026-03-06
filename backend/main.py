@@ -23,8 +23,10 @@ async def register(user: UserCreate):
     hashed_pw = hash_password(user.password)
 
     #create user document 
-    user_dict = user.dict()
-    user_dict["password"] = hashed_pw
+    user_dict = {
+        "email": user.email,
+        "password": hashed_pw
+    }
 
     #Insert user into database 
     await database.users.insert_one(user_dict)
