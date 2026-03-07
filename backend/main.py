@@ -3,6 +3,7 @@ from database import database
 from schemas import UserCreate, UserLogin, UserOut
 from auth import hash_password 
 from auth import verify_password
+from auth import create_access_token
 
 app = FastAPI()
 
@@ -29,7 +30,7 @@ async def register(user: UserCreate):
     }
 
     #Insert user into database 
-    await database.users.insert_one(user_dict)
+    result = await database.users.insert_one(user_dict)
 
     return {"message": "User registered successfully"}
 
@@ -46,4 +47,10 @@ async def login(user: UserLogin):
     if not verify_password(user.password, existing_user["password"]):
         raise HTTPException(status_code=400, detail= "Invalid email or password")
     
-    return {"message": "Login successful"}
+    #Create JWT token
+    token = create_access_token({"sub": existing_user["email"]})
+
+    return {
+        "access_token": token,
+        "token_type": "bearer"
+    }
