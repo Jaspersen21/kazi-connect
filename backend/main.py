@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from database import database
+from app.database.connection import database
 from schemas import UserCreate, UserLogin, UserOut
 from auth import hash_password 
 from auth import verify_password
