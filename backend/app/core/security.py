@@ -63,3 +63,15 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="User not found")
     
     return user
+
+async def get_current_employer(current_user = Depends(get_current_user)):
+
+    if current_user["role"] != "employer":
+        raise HTTPException(status_code=403, detail = "Only employers can create job")
+    return current_user
+
+async def get_current_seeker(current_user = Depends(get_current_user)):
+
+    if current_user["role"] != "seeker":
+        raise HTTPException(status_code=403, detail = "Only job seekers can apply for jobs")
+    return current_user

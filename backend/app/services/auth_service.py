@@ -1,8 +1,9 @@
 from app.database.connection import database
 from app.core.security import hash_password, verify_password, create_access_token
+from app.schemas.user import UserCreate
 
 
-async def register_user(user):
+async def register_user(user: UserCreate):
 
     existing_user = await database.users.find_one({"email": user.email})
 
@@ -19,7 +20,10 @@ async def register_user(user):
 
     result = await database.users.insert_one(new_user)
 
-    return {"message": "User registered successfully"}
+    return {
+        "name": user.name,
+        "email": user.email
+    }
 
 
 async def login_user(email: str, password: str):
