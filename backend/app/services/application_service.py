@@ -21,7 +21,7 @@ async def apply_for_job(job_id, seeker):
 
     existing_application = await database.applications.find_one({
         "job_id": ObjectId(job_id),
-        "user_id": ObjectId(seeker["_id"])
+        "user_id": seeker["_id"]
     })
 
     if existing_application:
@@ -30,7 +30,7 @@ async def apply_for_job(job_id, seeker):
 
     application = {
         "job_id": job_object_id,
-        "user_id": ObjectId(seeker["_id"]),
+        "user_id": seeker["_id"],
         "status": "pending"
     }
 
@@ -75,3 +75,35 @@ async def get_job_applications(job_id, employer):
     return applications
 
 
+async def  update_application_status(application_id, status, employer):
+
+    application = await database.applications.find_one({"_id": ObjectId(application_id)})
+
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    job = await database.jobs.find_one({"_id": ObjectId(application["job_id"])})
+
+    if str(job["created_by"]) != str(employer["_id"]):
+        raise HTTPException(status_code=403, detail="You are not authorized")
+    
+    await database.applications.update_one({"_id": ObjectId(application_id)}, {"$set": {"status": status}})
+
+    if status == "accepted":
+        await database.applications.update_many(
+            {
+                "job_id": application["job_id"],
+                "_id": {"$ne": ObjectId(application_id)}
+            },
+            {
+                "$set": {"status": "rejected"}
+            }
+        )
+
+    update_application = await database.applications.find_one({"_id": ObjectId(application_id)})
+
+    update_application["_id"] = str(update_application["_id"])
+    update_application["job_id"] = str(update_application["job_id"])
+    update_application["user_id"] = str(update_application["user_id"])
+
+    return update_application    

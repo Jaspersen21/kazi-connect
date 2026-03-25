@@ -27,8 +27,10 @@ def create_access_token(data: dict):
     to_encode = data.copy()
 
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})   
+    to_encode.update({"exp": expire})
+
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    
     return encoded_jwt
 
 
@@ -66,12 +68,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 async def get_current_employer(current_user = Depends(get_current_user)):
 
-    if current_user["role"] != "employer":
+    if current_user.get("role") != "employer":
         raise HTTPException(status_code=403, detail = "Only employers can create job")
     return current_user
 
 async def get_current_seeker(current_user = Depends(get_current_user)):
 
-    if current_user["role"] != "seeker":
+    if current_user.get("role") != "seeker":
         raise HTTPException(status_code=403, detail = "Only job seekers can apply for jobs")
     return current_user
