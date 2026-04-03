@@ -107,3 +107,54 @@ async def  update_application_status(application_id, status, employer):
     update_application["user_id"] = str(update_application["user_id"])
 
     return update_application    
+
+
+async def get_jobs_applied_by_seeker(seeker):
+
+    async def get_jobs_applied_by_seeker(seeker):
+        pipeline  = [
+            {
+                "$match": {
+                    "user_id": seeker["_id"]
+                }
+            },
+             {
+                 "$lookup": {
+                      "from": "jobs",
+                      "localField": "job_id",
+                      "foreignField":"_id",
+                      "as": "job_details"
+                 }
+             },
+             {
+                 "$unwind" : "job_details"
+             }
+        ]
+
+        cursor = database.applications.aggregate(pipeline)
+
+        applied_jobs = []
+
+        async for application  in cursor:
+
+            if not application.get("job_details"):
+                applied_jobs.append({
+                    "application_id": str(application["_id"]),
+                    "job_id": str(application["job_id"]),
+                    "status": application["status"],
+                    "title": "Job not found",
+                    "company": None
+                })
+                continue
+
+            applied_jobs.append({
+                "application_id": str(application["_id"]),
+                "job_id": str(application["job_id"]),
+                "status": application["status"],
+                "title": application["job_details"]["title"],
+                "company": application["job_details"]["company"]
+            })
+
+        return applied_jobs
+
+           
