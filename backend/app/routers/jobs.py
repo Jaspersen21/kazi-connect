@@ -14,8 +14,8 @@ async def create_new_job(job: JobCreate, employer = Depends(get_current_employer
     return await create_job(job, employer)
 
 @router.get("/applied")
-async def get_applied_jobs(seeker = Depends(get_current_seeker)):
-    return await get_jobs_applied_by_seeker(seeker)
+async def get_applied_jobs( page: int = 1, limit: int = 10, seeker = Depends(get_current_seeker)):
+    return await get_jobs_applied_by_seeker(page, limit, seeker)
 
 
 
@@ -25,7 +25,7 @@ async def get_jobs(page: int = 1, limit: int = 10):
 
 
 @router.post("/{job_id}/apply")
-async def apply_for_job(job_id: str, seeker = Depends(get_current_seeker)):
+async def apply_to_job(job_id: str, seeker = Depends(get_current_seeker)):
     return await apply_for_job(job_id, seeker)
 
 @router.get("/{job_id}/applications")

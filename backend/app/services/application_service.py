@@ -109,10 +109,13 @@ async def  update_application_status(application_id, status, employer):
     return update_application    
 
 
-async def get_jobs_applied_by_seeker(seeker):
+async def get_jobs_applied_by_seeker(page: int, limit: int, seeker):
 
-    async def get_jobs_applied_by_seeker(seeker):
-        pipeline  = [
+    total = await database.applications.count_documents({"user_id": seeker["_id"]})
+
+    skip = (page - 1) * limit
+
+    pipeline  = [
             {
                 "$match": {
                     "user_id": seeker["_id"]
@@ -127,15 +130,24 @@ async def get_jobs_applied_by_seeker(seeker):
                  }
              },
              {
-                 "$unwind" : "job_details"
+                 "$unwind" : {
+                        "path": "$job_details",
+                        "preserveNullAndEmptyArrays": True
+                 }
+             },
+             {
+                 "$skip": skip
+             },
+             {
+                 "$limit": limit
              }
         ]
 
-        cursor = database.applications.aggregate(pipeline)
+    cursor = database.applications.aggregate(pipeline)
 
-        applied_jobs = []
+    applied_jobs = []
 
-        async for application  in cursor:
+    async for application  in cursor:
 
             if not application.get("job_details"):
                 applied_jobs.append({
@@ -155,6 +167,11 @@ async def get_jobs_applied_by_seeker(seeker):
                 "company": application["job_details"]["company"]
             })
 
-        return applied_jobs
+    return {
+            "total": total,
+            "page": page,
+            "limit": limit,
+            "data": applied_jobs
+        }
 
            
