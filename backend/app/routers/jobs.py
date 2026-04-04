@@ -3,6 +3,8 @@ from app.schemas.job import JobCreate
 from app.services.job_service import create_job, list_jobs, get_job_by_id
 from app.core.security import get_current_employer, get_current_seeker
 from app.services.application_service import get_job_applications, apply_for_job, update_application_status, get_jobs_applied_by_seeker
+from fastapi import Query
+from typing import Literal
 
 router = APIRouter(
     prefix="/jobs",
@@ -14,13 +16,18 @@ async def create_new_job(job: JobCreate, employer = Depends(get_current_employer
     return await create_job(job, employer)
 
 @router.get("/applied")
-async def get_applied_jobs( page: int = 1, limit: int = 10, seeker = Depends(get_current_seeker)):
-    return await get_jobs_applied_by_seeker(page, limit, seeker)
+async def get_applied_jobs( 
+    seeker = Depends(get_current_seeker),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    status: Literal["pending", "accepted", "rejected"] | None = Query(None)
+):
+    return await get_jobs_applied_by_seeker(seeker, page, limit, status)
 
 
 
 @router.get("/")
-async def get_jobs(page: int = 1, limit: int = 10):
+async def get_jobs(page: int = Query(1, ge=1), limit: int = Query(10, ge=1, le=100)):
     return await list_jobs(page, limit)
 
 

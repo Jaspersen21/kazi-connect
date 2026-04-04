@@ -109,17 +109,24 @@ async def  update_application_status(application_id, status, employer):
     return update_application    
 
 
-async def get_jobs_applied_by_seeker(page: int, limit: int, seeker):
+async def get_jobs_applied_by_seeker(seeker, page: int, limit: int, status: str | None = None):
 
-    total = await database.applications.count_documents({"user_id": seeker["_id"]})
+    match_query = {
+        "user_id": seeker["_id"]
+    }
+
+    if status:
+        match_query["status"] = status
+
+    total = await database.applications.count_documents(match_query)
 
     skip = (page - 1) * limit
 
+    
+
     pipeline  = [
             {
-                "$match": {
-                    "user_id": seeker["_id"]
-                }
+                "$match": match_query
             },
              {
                  "$lookup": {
