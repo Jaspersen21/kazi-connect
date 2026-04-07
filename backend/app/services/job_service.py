@@ -18,10 +18,35 @@ async def create_job(job, current_user):
 
     return new_job
 
-async def list_jobs(page: int, limit: int):
+async def list_jobs(page: int, limit: int, search: str | None = None, 
+                    company: str | None = None):
+
     skip = (page - 1) * limit 
 
-    cursor = database.jobs.find().skip(skip).limit(limit)
+    query = {}
+
+    if search:
+        search = search.strip()
+        if not search:
+            search = None
+        if company:
+            query["$or"] = [
+                {"title": {"$regex": search, "$options": "i"}}]
+        else:
+            query["$or"] = [
+                {"title": {"$regex": search, "$options": "i"}},
+                {"company": {"$regex": search, "$options": "i"}}
+            ]
+
+    if company:
+        company = company.strip()
+        if not company:
+            company = None
+        query["company"] = company
+
+    total = await database.jobs.count_documents(query)
+
+    cursor = database.jobs.find(query).skip(skip).limit(limit)
 
     jobs = []
 
@@ -31,7 +56,12 @@ async def list_jobs(page: int, limit: int):
         jobs.append(job)
 
 
-    return jobs
+    return {
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "data": jobs
+    }
 
 async def get_job_by_id(job_id: str):
 
