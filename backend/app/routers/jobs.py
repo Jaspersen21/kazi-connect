@@ -29,8 +29,12 @@ async def get_applied_jobs(
 @router.get("/")
 async def get_jobs(page: int = Query(1, ge=1), 
                    limit: int = Query(10, ge=1, le=100),
-                   search: str | None = Query(None)):
-    return await list_jobs(page, limit, search)
+                   search: str | None = Query(None),
+                   company: str | None = Query(None),
+                   sort : str | None = Query(None),
+                   order: str = "asc"
+                   ):
+    return await list_jobs(page, limit, search, company, sort, order)
 
 
 @router.post("/{job_id}/apply")

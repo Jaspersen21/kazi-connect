@@ -19,7 +19,9 @@ async def create_job(job, current_user):
     return new_job
 
 async def list_jobs(page: int, limit: int, search: str | None = None, 
-                    company: str | None = None):
+                    company: str | None = None,
+                     sort: str | None = None, 
+                     order: str = "asc"):
 
     skip = (page - 1) * limit 
 
@@ -44,9 +46,27 @@ async def list_jobs(page: int, limit: int, search: str | None = None,
             company = None
         query["company"] = company
 
+    ALLOWED_SORT_FIELDS = ["title", "company"]
+
+    if sort:
+        sort = sort.strip().lower()
+        if sort not in ALLOWED_SORT_FIELDS:
+            raise HTTPException(status_code=400, detail="Invalid sort field")
+           
+
     total = await database.jobs.count_documents(query)
 
-    cursor = database.jobs.find(query).skip(skip).limit(limit)
+    cursor = database.jobs.find(query)
+
+    if sort:
+        order = order.lower()
+        sort_order = 1 if order == "asc" else -1 
+        cursor = cursor.sort(sort, sort_order)
+
+    else:
+        cursor = cursor.sort("_id", -1)
+
+    cursor = cursor.skip(skip).limit(limit)        
 
     jobs = []
 
