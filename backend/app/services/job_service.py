@@ -109,7 +109,7 @@ async def update_job_service(job_id, job_update, employer):
         raise HTTPException(status_code=400, detail="Invalid job ID format")
     
     #find job
-    job = await database.jobs.find_one({"_id": job_object_id}, {"is_active": True})
+    job = await database.jobs.find_one({"_id": job_object_id, "is_active": True})
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")

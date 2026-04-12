@@ -14,7 +14,7 @@ async def apply_for_job(job_id, seeker):
 
 
 
-    job = await database.jobs.find_one({"_id": ObjectId(job_id)})
+    job = await database.jobs.find_one({"_id": ObjectId(job_id), "is_active": True})
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
