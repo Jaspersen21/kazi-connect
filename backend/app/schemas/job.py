@@ -11,3 +11,8 @@ class JobOut(BaseModel):
     description: str
     company: str
     created_by: str
+
+class JobUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    company: str | None = None

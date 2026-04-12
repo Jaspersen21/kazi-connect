@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from app.schemas.job import JobCreate
-from app.services.job_service import create_job, list_jobs, get_job_by_id
+from app.schemas.job import JobCreate,JobUpdate
+from app.services.job_service import create_job, list_jobs, get_job_by_id, update_job_service, delete_job_service
 from app.core.security import get_current_employer, get_current_seeker
 from app.services.application_service import get_job_applications, apply_for_job, update_application_status, get_jobs_applied_by_seeker
 from fastapi import Query
@@ -32,7 +32,7 @@ async def get_jobs(page: int = Query(1, ge=1),
                    search: str | None = Query(None),
                    company: str | None = Query(None),
                    sort : str | None = Query(None),
-                   order: str = "asc"
+                   order: Literal["asc", "desc"] = Query("asc")
                    ):
     return await list_jobs(page, limit, search, company, sort, order)
 
@@ -46,8 +46,16 @@ async def get_applications(job_id: str, employer = Depends(get_current_employer)
     return await get_job_applications(job_id, employer)
 
 @router.patch("/applications/{application_id}")
-async def update_application(application_id: str, status: str, employer = Depends(get_current_employer)):
+async def update_application(application_id: str, status: Literal["pending", "accepted", "rejected"], employer = Depends(get_current_employer)):
     return await update_application_status(application_id, status, employer)
+
+@router.patch("/{job_id}")
+async def update_job(job_id: str, job_update: JobUpdate, employer = Depends(get_current_employer)):
+    return await update_job_service(job_id, job_update, employer)
+
+@router.delete("/{job_id}")
+async def delete_job(job_id: str, employer = Depends(get_current_employer)):
+    return await delete_job_service(job_id, employer)
 
 @router.get("/{job_id}")
 async def get_job(job_id: str):
