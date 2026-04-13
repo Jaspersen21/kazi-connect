@@ -1,6 +1,6 @@
 # 🚀 Kazi Connect – Job Marketplace API
 
-Kazi Connect is a backend API for a job marketplace platform where employers can post jobs and job seekers can apply, track applications, and manage opportunities.
+Kazi Connect is a job marketplace platform that connects employers and job seekers, enabling emloyers to post jobs and manage applicants while allowing usrs to apply, track applications and discover opportunities.
 
 This project is built with FastAPI and deployed on Render, using MongoDB Atlas for cloud database storage.
 
