@@ -2,22 +2,26 @@ from fastapi  import HTTPException
 from bson import ObjectId
 from bson.errors import InvalidId
 from app.database.connection import database
+from datetime import datetime, timezone
+from app.utils.formatters import format_job
+from app.utils.db_helpers import to_object_id
 
 async def create_job(job, current_user):
+    now = datetime.now(timezone.utc)
     new_job = {
         "title" : job.title,
         "description" : job.description,
         "company" : job.company,
         "created_by" : current_user["_id"],
-        "is_active": True
+        "is_active": True,
+        "created_at": now,
+        "updated_at": now
     }
 
     result = await database.jobs.insert_one(new_job)
 
-    new_job["_id"] = str(result.inserted_id)
-    new_job["created_by"] = str(new_job["created_by"])
-
-    return new_job
+    new_job["_id"] = result.inserted_id
+    return format_job(new_job)
 
 async def list_jobs(page: int, limit: int, search: str | None = None, 
                     company: str | None = None,
@@ -72,8 +76,7 @@ async def list_jobs(page: int, limit: int, search: str | None = None,
     jobs = []
 
     async for job in cursor:
-        job["_id"] = str(job["_id"])
-        job["created_by"] = str(job["created_by"])
+        job = format_job(job)
         jobs.append(job)
 
 
@@ -85,28 +88,21 @@ async def list_jobs(page: int, limit: int, search: str | None = None,
     }
 
 async def get_job_by_id(job_id: str):
-
-    try:
-        job_object_id = ObjectId(job_id)
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Invalid job ID format")
+    job_object_id = to_object_id(job_id, "job_id")
+   
     
     job = await database.jobs.find_one({"_id": job_object_id, "is_active": True})
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     
-    job["_id"] = str(job["_id"])
-    job["created_by"] = str(job["created_by"])
+    job = format_job(job)
 
     return job
 
 async def update_job_service(job_id, job_update, employer):
     #validate job id
-    try:
-        job_object_id = ObjectId(job_id)
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Invalid job ID format")
+    job_object_id = to_object_id(job_id, "job_id")
     
     #find job
     job = await database.jobs.find_one({"_id": job_object_id, "is_active": True})
@@ -125,24 +121,20 @@ async def update_job_service(job_id, job_update, employer):
     if not update_data:
         raise HTTPException(status_code=400, detail="No fields to update")
     
+    update_data["updated_at"] = datetime.now(timezone.utc)
+    
     await database.jobs.update_one({"_id": job_object_id}, {"$set": update_data})
 
     #fetch updated job
 
     updated_job = await database.jobs.find_one({"_id": job_object_id})
 
-    updated_job["_id"] = str(updated_job["_id"])
-    updated_job["created_by"] = str(updated_job["created_by"])
-
-    return updated_job
+    return format_job(updated_job)
 
 async def delete_job_service(job_id, employer):
     #validate job id
-    try:
-        job_object_id = ObjectId(job_id)
-    except InvalidId:
-        raise HTTPException(status_code=400, detail="Invalid job ID format")
-    
+    job_object_id = to_object_id(job_id, "job_id")
+
     #find job
     job = await database.jobs.find_one({"_id": job_object_id, "is_active": True})
 
@@ -154,7 +146,9 @@ async def delete_job_service(job_id, employer):
         raise HTTPException(status_code=403, detail="Not authorized to delete this job")
     
     #soft delete by setting is_active to False
-    await database.jobs.update_one({"_id": job_object_id}, {"$set": {"is_active": False}})
+    await database.jobs.update_one({"_id": job_object_id}, 
+                                   {"$set": {"is_active": False,
+                                             "updated_at": datetime.now(timezone.utc)}})
 
     return {"detail": "Job deleted successfully"}
     

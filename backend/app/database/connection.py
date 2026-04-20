@@ -1,14 +1,9 @@
-import os
-from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
+from app.core.config import settings
 
-load_dotenv()
 
-MONGO_URL = os.getenv("MONGO_URL")
-DB_NAME = os.getenv("DB_NAME", "kazi_connect")
-
-if not MONGO_URL:
+if not settings.MONGO_URL:
     raise ValueError("MONGO_URL environment variable is not set")
 
-client = AsyncIOMotorClient(MONGO_URL)
-database = client[DB_NAME]
+client = AsyncIOMotorClient(settings.MONGO_URL)
+database = client[settings.DB_NAME]
