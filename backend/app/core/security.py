@@ -70,11 +70,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 async def get_current_employer(current_user=Depends(get_current_user)):
     if current_user.get("role") != "employer":
-        raise HTTPException(status_code=403, detail="Only employers can create job")
+        raise HTTPException(status_code=403, detail="Only employers can perform this action")
     return current_user
 
 
 async def get_current_seeker(current_user=Depends(get_current_user)):
     if current_user.get("role") != "seeker":
-        raise HTTPException(status_code=403, detail="Only job seekers can apply for jobs")
+        raise HTTPException(status_code=403, detail="Only job seekers can perform this action")
     return current_user
