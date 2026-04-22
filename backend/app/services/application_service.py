@@ -148,7 +148,7 @@ async def get_jobs_applied_by_seeker(seeker, page: int, limit: int, status: str 
              }
         ]
 
-    cursor = database.applications.aggregate(pipeline)
+    cursor = await  database.applications.aggregate(pipeline)
 
     applied_jobs = []
 
