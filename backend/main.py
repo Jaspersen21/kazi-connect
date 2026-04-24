@@ -3,8 +3,23 @@ from app.routers.auth import router as auth_router
 from app.routers.jobs import router as jobs_router
 from app.routers.applications import router as applications_router
 from app.database.connection import database
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+# CORS configuration
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.on_event("startup")
 async def create_indexes():
