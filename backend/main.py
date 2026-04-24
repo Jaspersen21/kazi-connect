@@ -46,9 +46,13 @@ async def create_indexes():
 async def root():
     return {"message": "Kazi Connect API is running"}
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+@app.get("/health/db")
+async def health_db():
+    try:
+        await database.command("ping")
+        return {"status": "ok", "db": "connected"}
+    except Exception:
+        return {"status": "error", "db": "not connected"}
 
 app.include_router(auth_router)
 app.include_router(jobs_router)
