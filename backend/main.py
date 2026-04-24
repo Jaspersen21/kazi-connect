@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from app.routers.auth import router as auth_router
 from app.routers.jobs import router as jobs_router
 from app.routers.applications import router as applications_router
@@ -46,13 +46,18 @@ async def create_indexes():
 async def root():
     return {"message": "Kazi Connect API is running"}
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
 @app.get("/health/db")
 async def health_db():
     try:
         await database.command("ping")
         return {"status": "ok", "db": "connected"}
     except Exception:
-        return {"status": "error", "db": "not connected"}
+        raise HTTPException(status_code=503, detail="Database not connected")
 
 app.include_router(auth_router)
 app.include_router(jobs_router)
