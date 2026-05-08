@@ -3,6 +3,8 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import JobsPage from './pages/JobsPage'
 import Navbar from './components/Navbar'
+import ProtectedRoute from './components/ProtectedRoute'
+import ApplicationsPage from './pages/ApplicationsPage'
 
 function App() {
   return (
@@ -13,6 +15,12 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/applications"
+         element={
+          <ProtectedRoute>
+            <ApplicationsPage />
+          </ProtectedRoute>
+         } />
       </Routes>
     </main>
   )
