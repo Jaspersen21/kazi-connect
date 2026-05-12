@@ -1,14 +1,23 @@
-import type { Job, JobsResponse } from '../types/job'
+import type { JobsResponse, Job } from "../types/job";
 
+const API_URL = import.meta.env.VITE_API_URL;
 
-export async function getJobs(): Promise<Job[]> {
-  const response = await fetch('http://127.0.0.1:8000/jobs/')
+export async function getJobs(): Promise<JobsResponse> {
+  const response = await fetch(`${API_URL}/jobs`);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch jobs')
+    throw new Error("Failed to fetch jobs");
   }
 
-  const data: JobsResponse = await response.json()
+  return response.json();
+}
 
-  return data.data
+export async function getJobById(id: string): Promise<Job> {
+  const response = await fetch(`${API_URL}/jobs/${id}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch job");
+  }
+
+  return response.json();
 }

@@ -4,6 +4,8 @@ import { useJobs } from '../hooks/useJobs'
 function JobsPage() {
   const { data: jobs, isLoading, error } = useJobs()
 
+  const jobList = jobs?.data ?? [];
+
   if (isLoading) {
     return <p className="p-8 text-slate-600">Loading jobs...</p>
   }
@@ -26,7 +28,7 @@ function JobsPage() {
         </div>
 
         <div className="grid gap-5">
-          {jobs?.map((job) => (
+          {jobList.map((job) => (
             <JobCard key={job.id} job={job} />
           ))}
         </div>
