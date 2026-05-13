@@ -1,8 +1,14 @@
 import { Link, useParams } from 'react-router-dom'
 import { useJob } from '../hooks/useJob'
 import { useApplyToJob } from '../hooks/useApplyToJob'
+import { useAuth } from '../context/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 export default function JobDetailsPage() {
+
+    const { isLoggedIn } = useAuth()
+    const navigate = useNavigate()
+    
     const { id } = useParams()
 
     const { data: job, isLoading, isError } = useJob(id)
@@ -16,6 +22,14 @@ export default function JobDetailsPage() {
     if (isError || !job) {
         return <p className='p-6 text-red-600'> Job not found</p>
 
+    }
+
+    const handleApply = () => {
+        if (!isLoggedIn) {
+            navigate('/login')
+            return
+        }
+        applyMutation.mutate()
     }
 
     return (
@@ -38,7 +52,7 @@ export default function JobDetailsPage() {
                         </p>
                     </div>
                     <button 
-                    onClick={() => applyMutation.mutate()}
+                    onClick={handleApply}
                     disabled={applyMutation.isPending}
                     className='mt-8 rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50'>
                         {applyMutation.isPending ? 'Applying...' : 'Apply Now'}

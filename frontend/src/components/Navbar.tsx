@@ -19,6 +19,16 @@ function Navbar() {
           Jobs
         </Link>
 
+        { isLoggedIn && (
+          <Link 
+          to="/dashboard" 
+          className="transition hover:text-violet-600">
+            Dashboard
+          </Link>
+        )
+
+        }
+
         {isLoggedIn ? (
           <button
             onClick={logout}
