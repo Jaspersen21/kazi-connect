@@ -21,3 +21,19 @@ export async function getJobById(id: string): Promise<Job> {
 
   return response.json();
 }
+
+export async function applyToJob( jobId: string): Promise<void> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_URL}/jobs/${jobId}/apply`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to apply to job");
+  }
+}

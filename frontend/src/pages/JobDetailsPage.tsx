@@ -1,10 +1,13 @@
 import { Link, useParams } from 'react-router-dom'
 import { useJob } from '../hooks/useJob'
+import { useApplyToJob } from '../hooks/useApplyToJob'
 
 export default function JobDetailsPage() {
     const { id } = useParams()
 
     const { data: job, isLoading, isError } = useJob(id)
+
+    const applyMutation = useApplyToJob(id)
 
     if (isLoading) {
         return <p className='p-6 text-slate-600'>Loading job details...</p>
@@ -23,6 +26,7 @@ export default function JobDetailsPage() {
                     Back to Jobs
                 </Link>
                 <section className='rounded-2xl  border border-slate-200 bg-white p-8 shadow-sm'>
+                    
                     <h1 className=' text-3xl font-bold text-slate-900'>{job.title}</h1>
                     <p className='mt-2 text-large font-medium text-violet-700'>{job.company}</p>
 
@@ -33,6 +37,12 @@ export default function JobDetailsPage() {
                             {job.description}
                         </p>
                     </div>
+                    <button 
+                    onClick={() => applyMutation.mutate()}
+                    disabled={applyMutation.isPending}
+                    className='mt-8 rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50'>
+                        {applyMutation.isPending ? 'Applying...' : 'Apply Now'}
+                    </button>
                 </section>
             </div>
         </main>
