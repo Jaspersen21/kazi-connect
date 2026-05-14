@@ -7,6 +7,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import ApplicationsPage from './pages/ApplicationsPage'
 import JobDetailsPage from './pages/JobDetailsPage'
 import DashboardPage from './pages/DashboardPage'
+import MyApplicationsPage from './pages/MyApplicationsPage'
+
 
 
 function App() {
@@ -30,6 +32,11 @@ function App() {
             <ApplicationsPage />
           </ProtectedRoute>
          } />
+        <Route path="/my-applications" element={
+          <ProtectedRoute>
+            <MyApplicationsPage />
+          </ProtectedRoute>
+        } />
       </Routes>
     </main>
   )

@@ -25,9 +25,19 @@ function Navbar() {
           className="transition hover:text-violet-600">
             Dashboard
           </Link>
+          
         )
 
         }
+
+        { isLoggedIn && (
+          <Link 
+          to="/my-applications" 
+          className="transition hover:text-violet-600">
+            My Applications
+          </Link>
+          
+        ) }
 
         {isLoggedIn ? (
           <button
