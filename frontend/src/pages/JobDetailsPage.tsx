@@ -53,10 +53,21 @@ export default function JobDetailsPage() {
                     </div>
                     <button 
                     onClick={handleApply}
-                    disabled={applyMutation.isPending}
+                    disabled={applyMutation.isPending || applyMutation.isSuccess}
                     className='mt-8 rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50'>
-                        {applyMutation.isPending ? 'Applying...' : 'Apply Now'}
+                        {applyMutation.isPending 
+                        ? 'Applying...' 
+                        : applyMutation.isSuccess
+                        ? 'Applied'
+                        : 'Apply Now'}
                     </button>
+
+                    {applyMutation.isSuccess && (
+                        <p className='mt-4 text-sm font-medium text-emerald-600'>Application successful!</p>
+                    )}
+                    {applyMutation.isError && (
+                        <p className='mt-4 text-sm font-medium text-rose-600'>Failed to apply. You may have already applied for this job.</p>
+                    )}
                 </section>
             </div>
         </main>
