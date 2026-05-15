@@ -8,6 +8,7 @@ import ApplicationsPage from './pages/ApplicationsPage'
 import JobDetailsPage from './pages/JobDetailsPage'
 import DashboardPage from './pages/DashboardPage'
 import MyApplicationsPage from './pages/MyApplicationsPage'
+import RegisterPage  from './pages/RegisterPage'
 
 
 
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/jobs" element={<JobsPage />} />
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
         <Route path="/dashboard" element={
