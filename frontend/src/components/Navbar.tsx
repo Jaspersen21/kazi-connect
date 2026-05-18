@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom'
-import { useAuth } from '../context/useAuth'
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 function Navbar() {
-  const { isLoggedIn, logout } = useAuth()
+  const { isLoggedIn, logout } = useAuth();
+  const { data: currentUser } = useCurrentUser();
 
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-slate-200 bg-white/90 px-8 py-4 shadow-sm backdrop-blur">
@@ -19,25 +21,29 @@ function Navbar() {
           Jobs
         </Link>
 
-        { isLoggedIn && (
-          <Link 
-          to="/dashboard" 
-          className="transition hover:text-violet-600">
+        {isLoggedIn && (
+          <Link to="/dashboard" className="transition hover:text-violet-600">
             Dashboard
           </Link>
-          
-        )
+        )}
 
-        }
-
-        { isLoggedIn && (
-          <Link 
-          to="/my-applications" 
-          className="transition hover:text-violet-600">
+        {currentUser?.role === "seeker" && (
+          <Link
+            to="/my-applications"
+            className="transition hover:text-violet-600"
+          >
             My Applications
           </Link>
-          
-        ) }
+        )}
+
+        {currentUser?.role === "employer" && (
+          <Link
+            to="/jobs/create"
+            className="transition hover:text-violet-600"
+          >
+            Create Job
+          </Link>
+        )}
 
         {isLoggedIn ? (
           <button
@@ -56,7 +62,7 @@ function Navbar() {
         )}
       </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

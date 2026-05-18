@@ -1,3 +1,6 @@
+import { getToken } from "../lib/auth";
+import type { User } from '../types/user';
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 export async function loginUser(email: string, password: string) {
@@ -41,6 +44,27 @@ export async function registerUser(payload: RegisterPayload) {
 
   if (!response.ok) {
     throw new Error('Registration failed')
+  }
+
+  return response.json()
+}
+
+export async function getCurrentUser() : Promise<User> {
+  const token = getToken()
+
+  if (!token) {
+    throw new Error('Unauthorized')
+  }
+
+  const response = await fetch(`${API_URL}/auth/users/me`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch current user')
   }
 
   return response.json()

@@ -1,4 +1,7 @@
 import type { JobsResponse, Job } from "../types/job";
+import { getToken } from "../lib/auth";
+
+
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -60,4 +63,35 @@ export async function applyToJob( jobId: string): Promise<void> {
   if (!response.ok) {
     throw new Error("Failed to apply to job");
   }
+}
+
+
+export type CreateJobPayload = {
+  title: string;
+  description: string;
+  company: string;
+}
+
+
+export async function createJob(payload: CreateJobPayload) {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
+
+  const response = await fetch(`${API_URL}/jobs`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create job");
+  }
+
+  return response.json();
 }
