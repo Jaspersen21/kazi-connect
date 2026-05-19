@@ -1,5 +1,6 @@
 import type { Job } from '../types/job'
 import { Link } from 'react-router-dom'
+import { WhatsAppShareButton } from './WhatsAppShareButton'
 
 type JobCardProps = {
   job: Job
@@ -20,7 +21,12 @@ function JobCard({ job }: JobCardProps) {
         </span>
       </div>
 
-      <p className="text-slate-600">{job.description}</p>
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <p className="text-slate-600 line-clamp-2">{job.description}</p>
+        <div className="shrink-0">
+          <WhatsAppShareButton jobTitle={job.title} jobId={job.id} className="px-3 py-2" />
+        </div>
+      </div>
     </div>
     </Link>
   )

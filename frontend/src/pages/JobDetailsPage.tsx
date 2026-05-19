@@ -4,6 +4,8 @@ import { useApplyToJob } from '../hooks/useApplyToJob'
 import { useAuth } from '../context/useAuth'
 import { useNavigate } from 'react-router-dom'
 
+import { WhatsAppShareButton } from '../components/WhatsAppShareButton'
+
 export default function JobDetailsPage() {
 
     const { isLoggedIn } = useAuth()
@@ -51,16 +53,24 @@ export default function JobDetailsPage() {
                             {job.description}
                         </p>
                     </div>
-                    <button 
-                    onClick={handleApply}
-                    disabled={applyMutation.isPending || applyMutation.isSuccess}
-                    className='mt-8 rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50'>
-                        {applyMutation.isPending 
-                        ? 'Applying...' 
-                        : applyMutation.isSuccess
-                        ? 'Applied'
-                        : 'Apply Now'}
-                    </button>
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <button 
+                        onClick={handleApply}
+                        disabled={applyMutation.isPending || applyMutation.isSuccess}
+                        className='rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 flex-1'>
+                            {applyMutation.isPending 
+                            ? 'Applying...'
+                            : applyMutation.isSuccess
+                            ? 'Applied'
+                            : 'Apply Now'}
+                        </button>
+
+                        <WhatsAppShareButton
+                          jobTitle={job.title}
+                          jobId={job.id}
+                          className="flex-1"
+                        />
+                    </div>
 
                     {applyMutation.isSuccess && (
                         <p className='mt-4 text-sm font-medium text-emerald-600'>Application successful!</p>
