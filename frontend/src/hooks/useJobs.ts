@@ -5,7 +5,11 @@ type UseJobsParams = {
   search: string;
   sort?: string;
   order?: string;
+  location?: string;
+  category?: string;
+  job_type?: string;
 }
+
 
 export function useJobs(params: UseJobsParams){
     return useQuery({

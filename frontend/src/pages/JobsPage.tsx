@@ -1,11 +1,20 @@
 import JobCard from '../components/JobCard'
+import JobFiltersBar from '../components/JobFiltersBar'
 import { useJobs } from '../hooks/useJobs'
 import { useEffect ,useState } from 'react';
+
 
 function JobsPage() {
   const [search, setSearch] = useState('');
 
   const [sortOrder, setSortOrder] = useState('asc');
+
+  const [filters, setFilters] = useState<{
+    location?: string;
+    category?: string;
+    jobType?: string;
+  }>({});
+
 
   const[debouncedSearch, setDebouncedSearch] = useState(search);
 
@@ -18,11 +27,16 @@ function JobsPage() {
 }, [search]);
 
   const { data: jobs, isLoading, error } = useJobs(
-    { search: debouncedSearch,
+    {
+      search: debouncedSearch,
       sort: 'title',
       order: sortOrder,
+      location: filters.location,
+      category: filters.category,
+      job_type: filters.jobType,
     }
   );
+
 
   const jobList = jobs?.data ?? [];
 
@@ -65,6 +79,16 @@ function JobsPage() {
             <option value="desc">Title (Z-A)</option>
           </select>
         </div>
+
+        <JobFiltersBar
+          filters={{
+            location: filters.location,
+            category: filters.category,
+            jobType: filters.jobType,
+          }}
+          onFilterChange={(next) => setFilters(next)}
+        />
+
 
         <div className="grid gap-5">
           {jobList.map((job) => (

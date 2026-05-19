@@ -9,7 +9,11 @@ type GetJobsParams = {
   search?: string;
   sort?: string;
   order?: string;
+  location?: string;
+  category?: string;
+  job_type?: string;
 }
+
 
 export async function getJobs( params: GetJobsParams ): Promise<JobsResponse> {
 
@@ -26,6 +30,19 @@ export async function getJobs( params: GetJobsParams ): Promise<JobsResponse> {
   if (params?.order) {
     searchParams.set("order", params.order);
   }
+
+  if (params?.location) {
+    searchParams.set("location", params.location);
+  }
+
+  if (params?.category) {
+    searchParams.set("category", params.category);
+  }
+
+  if (params?.job_type) {
+    searchParams.set("job_type", params.job_type);
+  }
+
 
   const queryString = searchParams.toString();
 
