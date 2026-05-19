@@ -20,11 +20,18 @@ export default function JobFiltersBar({ filters, onFilterChange }: Props) {
   const [category, setCategory] = useState(filters.category ?? '');
   const [jobType, setJobType] = useState(filters.jobType ?? '');
 
+  // Keep local state in sync when parent filters change
   useEffect(() => {
-    setLocation(filters.location ?? '');
-    setCategory(filters.category ?? '');
-    setJobType(filters.jobType ?? '');
+    // Avoid cascaded renders by only updating if values actually differ
+    const nextLocation = filters.location ?? '';
+    const nextCategory = filters.category ?? '';
+    const nextJobType = filters.jobType ?? '';
+
+    setLocation((prev) => (prev === nextLocation ? prev : nextLocation));
+    setCategory((prev) => (prev === nextCategory ? prev : nextCategory));
+    setJobType((prev) => (prev === nextJobType ? prev : nextJobType));
   }, [filters.location, filters.category, filters.jobType]);
+
 
   const clear = () => {
     setLocation('');
