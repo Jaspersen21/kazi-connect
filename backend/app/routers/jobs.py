@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from typing import Literal
 
 from app.schemas.job import JobCreate, JobUpdate, JobOut, JobListResponse
+
 from app.services.job_service import (
     create_job,
     list_jobs,
@@ -31,10 +32,14 @@ async def get_jobs(
     limit: int = Query(10, ge=1, le=100),
     search: str | None = Query(None),
     company: str | None = Query(None),
+    location: str | None = Query(None),
+    category: str | None = Query(None),
+    job_type: str | None = Query(None),
     sort: str | None = Query(None),
     order: Literal["asc", "desc"] = Query("asc"),
 ):
-    return await list_jobs(page, limit, search, company, sort, order)
+    return await list_jobs(page, limit, search, company, location, category, job_type, sort, order)
+
 
 
 @router.patch("/{job_id}", response_model=JobOut)

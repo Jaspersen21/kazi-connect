@@ -13,10 +13,15 @@ class JobOut(BaseModel):
     title: str
     description: str
     company: str
+    # Optional fields for filtering
+    location: str | None = None
+    category: str | None = None
+    job_type: str | None = None
     created_by: str
     is_active: bool
     created_at: datetime
     updated_at: datetime
+
 
 class JobUpdate(BaseModel):
     title: str | None = Field(None, min_length=3)

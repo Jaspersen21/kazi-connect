@@ -25,8 +25,12 @@ async def create_job(job, current_user):
 
 async def list_jobs(page: int, limit: int, search: str | None = None, 
                     company: str | None = None,
-                     sort: str | None = None, 
-                     order: str = "asc"):
+                    location: str | None = None,
+                    category: str | None = None,
+                    job_type: str | None = None,
+                    sort: str | None = None, 
+                    order: str = "asc"):
+
 
     skip = (page - 1) * limit 
 
@@ -49,7 +53,30 @@ async def list_jobs(page: int, limit: int, search: str | None = None,
         company = company.strip()
         if not company:
             company = None
-        query["company"] = company
+        if company:
+            query["company"] = company
+
+    if location:
+        location = location.strip()
+        if not location:
+            location = None
+        if location:
+            query["location"] = location
+
+    if category:
+        category = category.strip()
+        if not category:
+            category = None
+        if category:
+            query["category"] = category
+
+    if job_type:
+        job_type = job_type.strip()
+        if not job_type:
+            job_type = None
+        if job_type:
+            query["job_type"] = job_type
+
 
     ALLOWED_SORT_FIELDS = ["title", "company"]
 
