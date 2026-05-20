@@ -25,7 +25,7 @@ export default function EmployerRoute({
   }
 
   if (currentUser?.role !== "employer") {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return children;

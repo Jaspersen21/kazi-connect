@@ -12,6 +12,8 @@ import CreateJobPage from "./pages/CreateJobPage";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EmployerRoute from "./components/EmployerRoute";
+import UnauthorizedPage from "./pages/UnauthorizedPage";
+
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
             </EmployerRoute>
           }
         />
+
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
 
