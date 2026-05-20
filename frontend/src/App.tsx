@@ -11,6 +11,7 @@ import CreateJobPage from "./pages/CreateJobPage";
 
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import EmployerRoute from "./components/EmployerRoute";
 
 function App() {
   return (
@@ -25,9 +26,9 @@ function App() {
         <Route
           path="/jobs/create"
           element={
-            <ProtectedRoute>
+            <EmployerRoute>
               <CreateJobPage />
-            </ProtectedRoute>
+            </EmployerRoute>
           }
         />
 
