@@ -46,6 +46,13 @@ export default function JobDetailsPage() {
                     <h1 className=' text-3xl font-bold text-slate-900'>{job.title}</h1>
                     <p className='mt-2 text-large font-medium text-violet-700'>{job.company}</p>
 
+                    {job.employer_verified && (
+                      <span className="mt-3 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
+                        Verified Employer
+                      </span>
+                    )}
+
+
                     <div className='mt-6 border-t border-slate-200 pt-6'>
                         <h2 className='text-lg font-semibold text-slate-900'>Job Description</h2>
 

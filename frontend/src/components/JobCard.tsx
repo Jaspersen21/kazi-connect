@@ -16,10 +16,18 @@ function JobCard({ job }: JobCardProps) {
             <p className="mt-1 font-medium text-blue-700">{job.company}</p>
           </div>
 
-        <span className="rounded-full bg-violet-50 px-3 py-1 text-sm font-medium text-violet-700">
-          Active
-        </span>
+          <div className="flex items-center gap-3">
+            {job.employer_verified && (
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
+                Verified Employer
+              </span>
+            )}
+            <span className="rounded-full bg-violet-50 px-3 py-1 text-sm font-medium text-violet-700">
+              Active
+            </span>
+          </div>
       </div>
+
 
       <div className="mt-4 flex items-center justify-between gap-4">
         <p className="text-slate-600 line-clamp-2">{job.description}</p>

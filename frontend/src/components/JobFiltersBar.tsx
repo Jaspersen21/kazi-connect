@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { type ChangeEvent } from 'react';
 
 type JobFilters = {
   location?: string;
@@ -16,27 +16,11 @@ const CATEGORY_OPTIONS = ['', 'Software', 'Design', 'Marketing', 'Sales', 'Opera
 const JOB_TYPE_OPTIONS = ['', 'Full-time', 'Part-time', 'Contract', 'Internship'];
 
 export default function JobFiltersBar({ filters, onFilterChange }: Props) {
-  const [location, setLocation] = useState(filters.location ?? '');
-  const [category, setCategory] = useState(filters.category ?? '');
-  const [jobType, setJobType] = useState(filters.jobType ?? '');
-
-  // Keep local state in sync when parent filters change
-  useEffect(() => {
-    // Avoid cascaded renders by only updating if values actually differ
-    const nextLocation = filters.location ?? '';
-    const nextCategory = filters.category ?? '';
-    const nextJobType = filters.jobType ?? '';
-
-    setLocation((prev) => (prev === nextLocation ? prev : nextLocation));
-    setCategory((prev) => (prev === nextCategory ? prev : nextCategory));
-    setJobType((prev) => (prev === nextJobType ? prev : nextJobType));
-  }, [filters.location, filters.category, filters.jobType]);
-
+  const location = filters.location ?? '';
+  const category = filters.category ?? '';
+  const jobType = filters.jobType ?? '';
 
   const clear = () => {
-    setLocation('');
-    setCategory('');
-    setJobType('');
     onFilterChange({ location: '', category: '', jobType: '' });
   };
 
@@ -44,9 +28,8 @@ export default function JobFiltersBar({ filters, onFilterChange }: Props) {
     <div className="mb-6 grid gap-4 md:grid-cols-3">
       <select
         value={location}
-        onChange={(e) => {
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => {
           const next = e.target.value;
-          setLocation(next);
           onFilterChange({ location: next || undefined, category, jobType });
         }}
         className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
@@ -60,9 +43,8 @@ export default function JobFiltersBar({ filters, onFilterChange }: Props) {
 
       <select
         value={category}
-        onChange={(e) => {
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => {
           const next = e.target.value;
-          setCategory(next);
           onFilterChange({ location, category: next || undefined, jobType });
         }}
         className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
@@ -77,9 +59,8 @@ export default function JobFiltersBar({ filters, onFilterChange }: Props) {
       <div className="flex items-center gap-3">
         <select
           value={jobType}
-          onChange={(e) => {
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
             const next = e.target.value;
-            setJobType(next);
             onFilterChange({ location, category, jobType: next || undefined });
           }}
           className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"

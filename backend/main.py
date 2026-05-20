@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from app.routers.auth import router as auth_router
 from app.routers.jobs import router as jobs_router
 from app.routers.applications import router as applications_router
+from app.routers.profile import router as profile_router
 from app.database.connection import database
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -62,3 +63,4 @@ async def health_db():
 app.include_router(auth_router)
 app.include_router(jobs_router)
 app.include_router(applications_router)
+app.include_router(profile_router)

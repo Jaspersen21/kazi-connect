@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
-import HomePage from "./pages/HomePage";
+import Landing from "./pages/Landing";
+
 import JobsPage from "./pages/JobsPage";
 import JobDetailsPage from "./pages/JobDetailsPage";
 import LoginPage from "./pages/LoginPage";
@@ -8,6 +9,7 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import MyApplicationsPage from "./pages/MyApplicationsPage";
 import CreateJobPage from "./pages/CreateJobPage";
+import ProfilePage from "./pages/ProfilePage";
 
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -18,7 +20,8 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Landing />} />
+
 
         <Route path="/jobs" element={<JobsPage />} />
 
@@ -27,6 +30,15 @@ function App() {
           element={
             <ProtectedRoute>
               <CreateJobPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />

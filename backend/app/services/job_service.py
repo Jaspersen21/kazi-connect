@@ -23,16 +23,19 @@ async def create_job(job, current_user):
     new_job["_id"] = result.inserted_id
     return format_job(new_job)
 
-async def list_jobs(page: int, limit: int, search: str | None = None, 
-                    company: str | None = None,
-                    location: str | None = None,
-                    category: str | None = None,
-                    job_type: str | None = None,
-                    sort: str | None = None, 
-                    order: str = "asc"):
+async def list_jobs(
+    page: int,
+    limit: int,
+    search: str | None = None,
+    company: str | None = None,
+    location: str | None = None,
+    category: str | None = None,
+    job_type: str | None = None,
+    sort: str | None = None,
+    order: str = "asc",
+):
 
-
-    skip = (page - 1) * limit 
+    skip = (page - 1) * limit
 
     query = {"is_active": True}
 
@@ -103,8 +106,16 @@ async def list_jobs(page: int, limit: int, search: str | None = None,
     jobs = []
 
     async for job in cursor:
+        created_by_id = job.get("created_by")
+        employer_verified = False
+        if created_by_id:
+            employer = await database.users.find_one({"_id": created_by_id})
+            employer_verified = bool(employer.get("verified", False)) if employer else False
+
         job = format_job(job)
+        job["employer_verified"] = employer_verified
         jobs.append(job)
+
 
 
     return {
@@ -119,6 +130,7 @@ async def get_job_by_id(job_id: str):
    
     
     job = await database.jobs.find_one({"_id": job_object_id, "is_active": True})
+
 
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
@@ -157,6 +169,10 @@ async def update_job_service(job_id, job_update, employer):
     updated_job = await database.jobs.find_one({"_id": job_object_id})
 
     return format_job(updated_job)
+
+async def count_active_jobs():
+    return {"count": await database.jobs.count_documents({"is_active": True})}
+
 
 async def delete_job_service(job_id, employer):
     #validate job id

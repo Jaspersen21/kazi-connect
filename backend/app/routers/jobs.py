@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from typing import Literal
 
+
 from app.schemas.job import JobCreate, JobUpdate, JobOut, JobListResponse
 
 from app.services.job_service import (
@@ -9,6 +10,7 @@ from app.services.job_service import (
     get_job_by_id,
     update_job_service,
     delete_job_service,
+    count_active_jobs,
 )
 from app.core.security import get_current_employer
 
@@ -57,6 +59,11 @@ async def delete_job(
     employer=Depends(get_current_employer)
 ):
     return await delete_job_service(job_id, employer)
+
+
+@router.get("/count")
+async def get_jobs_count():
+    return await count_active_jobs()
 
 
 @router.get("/{job_id}", response_model=JobOut)

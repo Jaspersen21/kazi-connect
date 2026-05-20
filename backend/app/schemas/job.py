@@ -19,8 +19,10 @@ class JobOut(BaseModel):
     job_type: str | None = None
     created_by: str
     is_active: bool
+    employer_verified: bool = False
     created_at: datetime
     updated_at: datetime
+
 
 
 class JobUpdate(BaseModel):

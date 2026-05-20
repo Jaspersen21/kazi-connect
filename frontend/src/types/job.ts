@@ -7,7 +7,9 @@ export type Job = {
   is_active: boolean
   created_at: string
   updated_at: string
+  employer_verified?: boolean
 }
+
 
 export type JobsResponse = {
   total: number
