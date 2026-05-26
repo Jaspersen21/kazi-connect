@@ -151,6 +151,30 @@ async def delete_job_service(job_id, employer):
                                              "updated_at": datetime.now(timezone.utc)}})
 
     return {"detail": "Job deleted successfully"}
+
+
+async def list_employer_jobs(employer, page: int, limit: int):
+    skip = (page - 1) * limit 
+
+    query = {"created_by": employer["_id"], "is_active": True}
+
+    total = await database.jobs.count_documents(query)
+
+    cursor = database.jobs.find(query).sort("_id", -1).skip(skip).limit(limit)
+
+    jobs = []
+
+    async for job in cursor:
+        job = format_job(job)
+        jobs.append(job)
+
+
+    return {
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "data": jobs
+    }
     
 
 

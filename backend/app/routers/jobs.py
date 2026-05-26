@@ -8,6 +8,7 @@ from app.services.job_service import (
     get_job_by_id,
     update_job_service,
     delete_job_service,
+    list_employer_jobs
 )
 from app.core.security import get_current_employer
 
@@ -35,6 +36,14 @@ async def get_jobs(
     order: Literal["asc", "desc"] = Query("asc"),
 ):
     return await list_jobs(page, limit, search, company, sort, order)
+
+@router.get("/employer/me", response_model=JobListResponse)
+async def get_my_jobs(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    employer=Depends(get_current_employer)
+):
+    return await list_employer_jobs(employer, page, limit)
 
 
 @router.patch("/{job_id}", response_model=JobOut)

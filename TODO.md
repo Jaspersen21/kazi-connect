@@ -3,9 +3,10 @@
 ## Current Phase
 - [x] Build EmployerRoute
 - [x] Protect /jobs/create
-- [ ] Better unauthorized UX
+- [x] Better unauthorized UX
 
 ## Employer Dashboard
+- [ ] Add backend endpoint for employer jobs
 - [ ] View employer jobs
 - [ ] Edit jobs
 - [ ] Delete jobs
