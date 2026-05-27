@@ -11,3 +11,10 @@ export type ApplicationsResponse = {
   limit: number;
   data: Application[];
 };
+
+export type JobApplication = {
+  application_id: string;
+  name: string;
+  email: string;
+  status: "pending" | "accepted" | "rejected";
+};

@@ -10,7 +10,7 @@
 - [x] View employer jobs
 - [ ] Edit jobs
 - [ ] Delete jobs
-- [ ] View applicants
+- [x] View applicants
 
 ## Applicant Management
 - [ ] Accept applicants
