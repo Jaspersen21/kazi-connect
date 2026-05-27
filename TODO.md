@@ -6,8 +6,8 @@
 - [x] Better unauthorized UX
 
 ## Employer Dashboard
-- [ ] Add backend endpoint for employer jobs
-- [ ] View employer jobs
+- [x] Add backend endpoint for employer jobs
+- [x] View employer jobs
 - [ ] Edit jobs
 - [ ] Delete jobs
 - [ ] View applicants

@@ -1,5 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+import EmployerRoute from "./components/EmployerRoute";
+
 import HomePage from "./pages/HomePage";
 import JobsPage from "./pages/JobsPage";
 import JobDetailsPage from "./pages/JobDetailsPage";
@@ -8,12 +12,8 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import MyApplicationsPage from "./pages/MyApplicationsPage";
 import CreateJobPage from "./pages/CreateJobPage";
-
-import Navbar from "./components/Navbar";
-import ProtectedRoute from "./components/ProtectedRoute";
-import EmployerRoute from "./components/EmployerRoute";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
-
+import EmployerDashboardPage from "./pages/EmployerDashboardPage";
 
 function App() {
   return (
@@ -34,13 +34,13 @@ function App() {
           }
         />
 
-        <Route path="/unauthorized" element={<UnauthorizedPage />} />
-
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
 
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/register" element={<RegisterPage />} />
+
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
         <Route
           path="/dashboard"
@@ -57,6 +57,15 @@ function App() {
             <ProtectedRoute>
               <MyApplicationsPage />
             </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/employer/dashboard"
+          element={
+            <EmployerRoute>
+              <EmployerDashboardPage />
+            </EmployerRoute>
           }
         />
       </Routes>

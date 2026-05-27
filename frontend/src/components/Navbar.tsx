@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import { useAuth } from "../context/useAuth";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
@@ -22,7 +23,10 @@ function Navbar() {
         </Link>
 
         {isLoggedIn && (
-          <Link to="/dashboard" className="transition hover:text-violet-600">
+          <Link
+            to="/dashboard"
+            className="transition hover:text-violet-600"
+          >
             Dashboard
           </Link>
         )}
@@ -37,12 +41,21 @@ function Navbar() {
         )}
 
         {currentUser?.role === "employer" && (
-          <Link
-            to="/jobs/create"
-            className="transition hover:text-violet-600"
-          >
-            Create Job
-          </Link>
+          <>
+            <Link
+              to="/employer/dashboard"
+              className="transition hover:text-violet-600"
+            >
+              Employer Dashboard
+            </Link>
+
+            <Link
+              to="/jobs/create"
+              className="transition hover:text-violet-600"
+            >
+              Create Job
+            </Link>
+          </>
         )}
 
         {isLoggedIn ? (
@@ -53,12 +66,21 @@ function Navbar() {
             Logout
           </button>
         ) : (
-          <Link
-            to="/login"
-            className="rounded-lg bg-violet-600 px-4 py-2 text-white transition hover:bg-violet-700"
-          >
-            Login
-          </Link>
+          <>
+            <Link
+              to="/login"
+              className="rounded-lg bg-violet-600 px-4 py-2 text-white transition hover:bg-violet-700"
+            >
+              Login
+            </Link>
+
+            <Link
+              to="/register"
+              className="rounded-lg border border-violet-600 px-4 py-2 text-violet-600 transition hover:bg-violet-50"
+            >
+              Register
+            </Link>
+          </>
         )}
       </div>
     </nav>
