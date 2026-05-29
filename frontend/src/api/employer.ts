@@ -43,3 +43,32 @@ export async function getJobApplications(jobId: string): Promise<JobApplication[
 
     return response.json();
 }
+
+export type ApplicationStatus = "pending" | "accepted" | "rejected";
+
+export async function updateApplicationStatus(
+  applicationId: string,
+  status: ApplicationStatus
+) {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
+
+  const response = await fetch(
+    `${API_URL}/applications/${applicationId}?status=${status}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update application status");
+  }
+
+  return response.json();
+}

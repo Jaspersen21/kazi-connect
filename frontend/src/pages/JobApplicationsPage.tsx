@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useJobApplications } from "../hooks/useJobApplications";
+import { useUpdateApplicationStatus } from "../hooks/useUpdateApplicationStatus";
 
 export default function JobApplicationsPage() {
   const { id } = useParams();
@@ -9,6 +10,8 @@ export default function JobApplicationsPage() {
     isLoading,
     error,
   } = useJobApplications(id ?? "");
+
+  const updateStatusMutation = useUpdateApplicationStatus(id ?? "");
 
   if (isLoading) {
     return (
@@ -77,6 +80,34 @@ export default function JobApplicationsPage() {
                   <span className="rounded-full bg-violet-100 px-3 py-1 text-sm font-medium text-violet-700">
                     {application.status}
                   </span>
+                  <div className="mt-4 flex gap-4">
+                    {application.status !== "accepted" && (
+                      <button
+                        onClick={() =>
+                          updateStatusMutation.mutate({
+                            applicationId: application.application_id,
+                            status: "accepted",
+                          })
+                        }
+                        className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
+                      >
+                        Accept
+                      </button>
+                    )}
+                    {application.status !== "rejected" && (
+                      <button
+                        onClick={() =>
+                          updateStatusMutation.mutate({
+                            applicationId: application.application_id,
+                            status: "rejected",
+                          })
+                        }
+                        className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700"
+                      >
+                        Reject
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))
