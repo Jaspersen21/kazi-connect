@@ -81,7 +81,7 @@ function App() {
         />
 
         <Route
-          path="/dashboard/jobs/:jobId/edit"
+          path="/employer/jobs/:jobId/edit"
           element={
             <EmployerRoute>
               <EditJobPage />

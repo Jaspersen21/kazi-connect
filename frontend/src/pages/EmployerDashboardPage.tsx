@@ -1,6 +1,6 @@
-import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import { Link } from "react-router-dom";
 import { useDeleteJob } from "../hooks/useDeleteJob";
+import { useEmployerJobs } from "../hooks/useEmployerJobs";
 
 export default function EmployerDashboardPage() {
   const { data, isLoading, error } = useEmployerJobs();
@@ -17,12 +17,23 @@ export default function EmployerDashboardPage() {
   }
 
   if (isLoading) {
-    return <p className="p-8 text-slate-600">Loading employer jobs...</p>;
+    return (
+      <p className="p-8 text-slate-600">
+        Loading employer jobs...
+      </p>
+    );
   }
 
   if (error) {
-    return <p className="p-8 text-slate-600">Failed to load employer jobs.</p>;
+    return (
+      <p className="p-8 text-slate-600">
+        Failed to load employer jobs.
+      </p>
+    );
   }
+
+  const jobs = data?.data ?? [];
+  const hasJobs = jobs.length > 0;
 
   return (
     <main className="min-h-screen bg-slate-100 px-6 py-12">
@@ -35,42 +46,69 @@ export default function EmployerDashboardPage() {
           Manage the jobs you have created.
         </p>
 
-        <div className="mt-8 space-y-4">
-          {data?.data.map((job) => (
-            <div key={job.id} className="rounded-2xl bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-slate-900">
-                {job.title}
-              </h2>
+        {!hasJobs && (
+          <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900">
+              No jobs yet
+            </h2>
 
-              <p className="mt-2 text-slate-600">{job.company}</p>
+            <p className="mt-2 text-slate-600">
+              You haven't posted any jobs yet. Create your first job to start
+              receiving applications.
+            </p>
 
-              <div className="mt-4 flex flex-wrap gap-4">
-                <Link
-                  to={`/employer/jobs/${job.id}/applications`}
-                  className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700"
-                >
-                  View Applicants
-                </Link>
+            <Link
+              to="/jobs/create"
+              className="mt-4 inline-block rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700"
+            >
+              Create Job
+            </Link>
+          </div>
+        )}
 
-                <Link
-                  to={`/employer/jobs/${job.id}/edit`}
-                  className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:text-violet-600"
-                >
-                  Edit Job
-                </Link>
+        {hasJobs && (
+          <div className="mt-8 space-y-4">
+            {jobs.map((job) => (
+              <div
+                key={job.id}
+                className="rounded-2xl bg-white p-6 shadow-sm"
+              >
+                <h2 className="text-xl font-semibold text-slate-900">
+                  {job.title}
+                </h2>
 
-                <button
-                  type="button"
-                  onClick={() => handleDelete(job.id)}
-                  disabled={deleteJobMutation.isPending}
-                  className="rounded-xl bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-200 disabled:opacity-50"
-                >
-                  Delete
-                </button>
+                <p className="mt-2 text-slate-600">
+                  {job.company}
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-4">
+                  <Link
+                    to={`/employer/jobs/${job.id}/applications`}
+                    className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700"
+                  >
+                    View Applicants
+                  </Link>
+
+                  <Link
+                    to={`/employer/jobs/${job.id}/edit`}
+                    className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:text-violet-600"
+                  >
+                    Edit Job
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(job.id)}
+                    disabled={deleteJobMutation.isPending}
+                    className="rounded-xl bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-200 disabled:opacity-50"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );

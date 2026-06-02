@@ -18,7 +18,7 @@
 
 ## UI Polish
 - [ ] Toast notifications
-- [ ] Empty states
+- [x] Empty states
 - [ ] Responsive design
 
 ## Deployment
