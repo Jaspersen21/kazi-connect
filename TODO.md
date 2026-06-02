@@ -8,13 +8,13 @@
 ## Employer Dashboard
 - [x] Add backend endpoint for employer jobs
 - [x] View employer jobs
-- [ ] Edit jobs
+- [x] Edit jobs
 - [ ] Delete jobs
 - [x] View applicants
 
 ## Applicant Management
-- [ ] Accept applicants
-- [ ] Reject applicants
+- [x] Accept applicants
+- [x] Reject applicants
 
 ## UI Polish
 - [ ] Toast notifications

@@ -1,7 +1,5 @@
-import type { JobsResponse, Job } from "../types/job";
+import type { JobsResponse, Job, JobFormValues } from "../types/job";
 import { getToken } from "../lib/auth";
-
-
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,28 +7,20 @@ type GetJobsParams = {
   search?: string;
   sort?: string;
   order?: string;
-}
+};
 
-export async function getJobs( params: GetJobsParams ): Promise<JobsResponse> {
-
+export async function getJobs(params: GetJobsParams): Promise<JobsResponse> {
   const searchParams = new URLSearchParams();
 
-  if (params?.search) {
-    searchParams.set("search", params.search);
-  }
-
-  if (params?.sort) {
-    searchParams.set("sort", params.sort);
-  }
-
-  if (params?.order) {
-    searchParams.set("order", params.order);
-  }
+  if (params?.search) searchParams.set("search", params.search);
+  if (params?.sort) searchParams.set("sort", params.sort);
+  if (params?.order) searchParams.set("order", params.order);
 
   const queryString = searchParams.toString();
 
-
-  const response = await fetch(`${API_URL}/jobs${queryString ? `?${queryString}` : ""}`);
+  const response = await fetch(
+    `${API_URL}/jobs${queryString ? `?${queryString}` : ""}`
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch jobs");
@@ -49,15 +39,18 @@ export async function getJobById(id: string): Promise<Job> {
   return response.json();
 }
 
-export async function applyToJob( jobId: string): Promise<void> {
-  const token = localStorage.getItem("token");
+export async function applyToJob(jobId: string): Promise<void> {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
 
   const response = await fetch(`${API_URL}/jobs/${jobId}/apply`, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${token}`,
-      
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {
@@ -65,15 +58,9 @@ export async function applyToJob( jobId: string): Promise<void> {
   }
 }
 
+export type CreateJobPayload = JobFormValues;
 
-export type CreateJobPayload = {
-  title: string;
-  description: string;
-  company: string;
-}
-
-
-export async function createJob(payload: CreateJobPayload) {
+export async function createJob(payload: CreateJobPayload): Promise<Job> {
   const token = getToken();
 
   if (!token) {
@@ -83,10 +70,10 @@ export async function createJob(payload: CreateJobPayload) {
   const response = await fetch(`${API_URL}/jobs`, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json"
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -96,3 +83,30 @@ export async function createJob(payload: CreateJobPayload) {
   return response.json();
 }
 
+export type UpdateJobPayload = Partial<JobFormValues>;
+
+export async function updateJob(
+  jobId: string,
+  payload: UpdateJobPayload
+): Promise<Job> {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
+
+  const response = await fetch(`${API_URL}/jobs/${jobId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update job");
+  }
+
+  return response.json();
+}

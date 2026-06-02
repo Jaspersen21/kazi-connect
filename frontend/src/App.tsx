@@ -15,6 +15,7 @@ import CreateJobPage from "./pages/CreateJobPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import EmployerDashboardPage from "./pages/EmployerDashboardPage";
 import JobApplicationsPage from "./pages/JobApplicationsPage";
+import EditJobPage from "./pages/EditJobPage";
 
 function App() {
   return (
@@ -75,6 +76,15 @@ function App() {
           element={
             <EmployerRoute>
               <JobApplicationsPage />
+            </EmployerRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/jobs/:jobId/edit"
+          element={
+            <EmployerRoute>
+              <EditJobPage />
             </EmployerRoute>
           }
         />
