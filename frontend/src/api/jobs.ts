@@ -110,3 +110,24 @@ export async function updateJob(
 
   return response.json();
 }
+
+export async function deleteJob(jobId: string): Promise<void> {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
+
+  const response = await fetch(`${API_URL}/jobs/${jobId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete job");
+  }
+
+  return;
+}

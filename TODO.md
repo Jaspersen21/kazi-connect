@@ -9,7 +9,7 @@
 - [x] Add backend endpoint for employer jobs
 - [x] View employer jobs
 - [x] Edit jobs
-- [ ] Delete jobs
+- [x] Delete jobs
 - [x] View applicants
 
 ## Applicant Management
