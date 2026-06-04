@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useDeleteJob } from "../hooks/useDeleteJob";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
+import JobCardSkeleton from "../components/JobCardSkeleton";
 
 export default function EmployerDashboardPage() {
   const { data, isLoading, error } = useEmployerJobs();
@@ -18,19 +19,38 @@ export default function EmployerDashboardPage() {
 
   if (isLoading) {
     return (
-      <p className="p-8 text-slate-600">
-        Loading employer jobs...
-      </p>
+      <main className="min-h-screen bg-slate-100 px-6 py-12">
+        <div className="mx-auto max-w-5xl ">
+          <div className="h-6 w-64 rounded-xl bg-slate-200 animate-pulse" />
+          <div className="mt-3 h-4 w-80 rounded-xl bg-slate-200 animate-pulse" />
+
+          <div className="mt-8 space-y-4">
+            <JobCardSkeleton />
+            <JobCardSkeleton />
+            <JobCardSkeleton />
+          </div>
+        </div>
+      </main>
     );
   }
 
-  if (error) {
-    return (
-      <p className="p-8 text-slate-600">
-        Failed to load employer jobs.
-      </p>
-    );
-  }
+ if (error) {
+  return (
+    <main className="min-h-screen bg-slate-100 px-6 py-12">
+      <div className="mx-auto max-w-5xl">
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-slate-900">
+            Unable to load jobs
+          </h2>
+
+          <p className="mt-2 text-slate-600">
+            Something went wrong while loading your jobs. Please refresh the page and try again.
+          </p>
+        </div>
+      </div>
+    </main>
+  );
+}
 
   const jobs = data?.data ?? [];
   const hasJobs = jobs.length > 0;
@@ -102,12 +122,20 @@ export default function EmployerDashboardPage() {
                     disabled={deleteJobMutation.isPending}
                     className="rounded-xl bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-200 disabled:opacity-50"
                   >
-                    Delete
+                    {deleteJobMutation.isPending ? "Deleting..." : "Delete"}
                   </button>
                 </div>
+
+
               </div>
             ))}
           </div>
+        )}
+
+        {deleteJobMutation.error && (
+          <p className="mt-4 text-slate-600">
+            Failed to delete job. Please try again.
+          </p>
         )}
       </div>
     </main>

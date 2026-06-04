@@ -1,34 +1,56 @@
-import { useState } from 'react'
-import { loginUser } from '../api/auth'
-import { useAuth } from '../context/useAuth'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getCurrentUser, loginUser } from "../api/auth";
+import { useAuth } from "../context/useAuth";
 
 function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { login } = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setErrorMessage("");
+    setIsSubmitting(true);
 
     try {
-      const data = await loginUser(email, password)
-      login(data.access_token)
-      console.log('login successful', data)
+      const data = await loginUser(email, password);
+
+      login(data.access_token);
+
+      const currentUser = await getCurrentUser();
+
+      if (currentUser.role === "employer") {
+        navigate("/employer/dashboard");
+      } else {
+        navigate("/jobs");
+      }
     } catch (error) {
-      console.error('Login failed', error)
+      console.error("Login failed", error);
+      setErrorMessage("Login failed. Please check your email and password.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="flex justify-center items-center h-[70vh]">
-      <div className="w-full max-w-sm p-6 border rounded">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+    <main className="min-h-screen bg-slate-100 px-6 py-12">
+      <div className="mx-auto max-w-sm rounded-2xl bg-white p-6 shadow-sm">
+        <h1 className="text-3xl font-bold text-slate-900">Login</h1>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <p className="mt-2 text-slate-600">
+          Welcome back to Kazi Connect.
+        </p>
+
+        <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
           <input
             type="email"
             placeholder="Email"
-            className="p-2 border rounded"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-slate-900"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -36,21 +58,26 @@ function LoginPage() {
           <input
             type="password"
             placeholder="Password"
-            className="p-2 border rounded"
+            className="rounded-xl border border-slate-200 px-4 py-3 text-slate-900"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
+          {errorMessage && (
+            <p className="text-sm text-slate-600">{errorMessage}</p>
+          )}
+
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 rounded"
+            disabled={isSubmitting}
+            className="rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700 disabled:opacity-50"
           >
-            Login
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
-    </div>
-  )
+    </main>
+  );
 }
 
-export default LoginPage
+export default LoginPage;

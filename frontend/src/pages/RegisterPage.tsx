@@ -1,32 +1,37 @@
-import {  useState } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
-import { registerUser } from "../api/auth";
 import { useNavigate } from "react-router-dom";
-
+import { registerUser } from "../api/auth";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"seeker" | "employer">("seeker");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setErrorMessage("");
+    setIsSubmitting(true);
 
     try {
-      const data = await registerUser({
+      await registerUser({
         name,
         email,
         password,
         role,
       });
 
-      console.log("Registration successful", data);
       navigate("/login");
     } catch (error) {
       console.error("Registration failed", error);
+      setErrorMessage("Registration failed. Please check your details and try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -38,7 +43,7 @@ export default function RegisterPage() {
         </h1>
 
         <p className="mt-2 text-slate-600">
-          Join Kazi Connect and start exploring opportunities.
+          Join Kazi Connect as a job seeker or employer.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8">
@@ -52,7 +57,7 @@ export default function RegisterPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-violet-600"
             />
           </div>
 
@@ -66,7 +71,7 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-violet-600"
             />
           </div>
 
@@ -80,7 +85,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Create a password"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-violet-600"
             />
           </div>
 
@@ -94,18 +99,25 @@ export default function RegisterPage() {
               onChange={(e) =>
                 setRole(e.target.value as "seeker" | "employer")
               }
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-violet-600"
             >
               <option value="seeker">Job Seeker</option>
               <option value="employer">Employer</option>
             </select>
           </div>
 
+          {errorMessage && (
+            <p className="mt-4 text-sm text-slate-600">
+              {errorMessage}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="mt-8 w-full rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700"
+            disabled={isSubmitting}
+            className="mt-8 w-full rounded-xl bg-violet-600 px-5 py-3 font-medium text-white transition hover:bg-violet-700 disabled:opacity-50"
           >
-            Create Account
+            {isSubmitting ? "Creating account..." : "Create Account"}
           </button>
         </form>
       </div>
