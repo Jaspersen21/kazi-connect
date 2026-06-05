@@ -1,25 +1,73 @@
-# 🚀 Kazi Connect – Job Marketplace API
+# 🚀 Kazi Connect
 
-Kazi Connect is a job marketplace platform that connects employers and job seekers, enabling emloyers to post jobs and manage applicants while allowing usrs to apply, track applications and discover opportunities.
+Kazi Connect is a full-stack job marketplace platform that connects employers and job seekers.
 
-This project is built with FastAPI and deployed on Render, using MongoDB Atlas for cloud database storage.
+Job seekers can browse opportunities, apply for jobs, and track their applications, while employers can create job listings, manage applicants, and make hiring decisions through a dedicated dashboard.
+
+Built with FastAPI, MongoDB Atlas, React, TypeScript, React Query, and Tailwind CSS.
 
 ---
 
-## 🌐 Live API
+## 🌐 Live Demo
 
-* **Base URL:** https://kazi-connect-backend.onrender.com
-* **API Docs (Swagger):** https://kazi-connect-backend.onrender.com/docs
+### Frontend
+
+https://kazi-connect-whkm-git-main-jaspersen21s-projects.vercel.app
+
+### Backend API
+
+https://kazi-connect-backend.onrender.com
+
+### Swagger Documentation
+
+https://kazi-connect-backend.onrender.com/docs
+
+---
+
+## 📸 Screenshots
+
+### Home Page
+
+![Home Page](screenshots/home-page.png)
+
+### Login Page
+
+![Login Page](screenshots/login-page.png)
+
+### Register Page
+
+![Register Page](screenshots/register-page.png)
+
+### Jobs Page
+
+![Jobs Page](screenshots/jobs-page.png)
 
 ---
 
 ## ⚙️ Tech Stack
 
-* **Backend:** FastAPI (Python)
-* **Database:** MongoDB Atlas
-* **Authentication:** JWT (JSON Web Tokens)
-* **Deployment:** Render
-* **Async DB Driver:** Motor
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* React Router
+* TanStack React Query
+* Tailwind CSS
+
+### Backend
+
+* FastAPI
+* PyMongo Async
+* MongoDB Atlas
+* Pydantic
+* JWT Authentication
+
+### Deployment
+
+* Vercel
+* Render
+* MongoDB Atlas
 
 ---
 
@@ -27,137 +75,219 @@ This project is built with FastAPI and deployed on Render, using MongoDB Atlas f
 
 ### Authentication
 
-* User registration (job seeker / employer)
-* Secure login with JWT tokens
-* Token-based protected routes
+* User registration
+* Secure login
+* JWT authentication
+* Protected routes
+* Role-based access control
+
+### Job Seeker Features
+
+* Browse jobs
+* Search jobs
+* Sort jobs
+* View job details
+* Apply for jobs
+* Track applications
+* View application status
+
+### Employer Features
+
+* Create jobs
+* Edit jobs
+* Delete jobs
+* Employer dashboard
+* View applicants
+* Accept applicants
+* Reject applicants
+
+### User Experience
+
+* Loading states
+* Error states
+* Empty states
+* Responsive design
+* SPA routing support
+
+---
+
+## ⚡ React Query Features
+
+Kazi Connect uses TanStack React Query for:
+
+* Data fetching
+* Mutations
+* Cache invalidation
+* Automatic refetching
+* Loading state management
+* Error handling
+
+---
+
+## 🏗️ Architecture
+
+```text
+React + TypeScript + React Query
+                │
+                ▼
+          FastAPI Backend
+                │
+                ▼
+          MongoDB Atlas
+```
+
+---
+
+## 📂 Project Structure
+
+```text
+kazi-connect/
+│
+├── backend/
+│   ├── app/
+│   │   ├── core/
+│   │   ├── database/
+│   │   ├── routers/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   └── utils/
+│   │
+│   ├── main.py
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   │
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── screenshots/
+├── README.md
+└── TODO.md
+```
+
+
+---
+
+## 🔌 API Endpoints
+
+### Authentication
+
+* `POST /auth/register`
+* `POST /auth/login`
 
 ### Jobs
 
-* Employers can create job listings
-* Public job browsing
-* Pagination, search, filtering, sorting
+* `GET /jobs`
+* `POST /jobs`
+* `GET /jobs/{job_id}`
+* `PUT /jobs/{job_id}`
+* `DELETE /jobs/{job_id}`
 
 ### Applications
 
-* Job seekers can apply to jobs
-* Prevent duplicate applications
-* Employers can view applicants
-* Employers can accept/reject applications
-* Job seekers can track application status
+* `POST /jobs/{job_id}/apply`
+* `GET /applications/me`
+* `GET /jobs/{job_id}/applications`
+
+### Employer Dashboard
+
+* `GET /employer/jobs`
 
 ---
 
-## 📦 Project Structure
+## 🛠️ Local Development
 
-```
-backend/
-│
-├── main.py
-├── routes/
-├── services/
-├── models/
-├── database/
-└── utils/
-```
-
----
-
-## 🧪 API Usage
-
-### 1. Register
-
-`POST /register`
-
-### 2. Login
-
-`POST /login`
-
-👉 Copy the token from the response.
-
----
-
-### 3. Authorize
-
-Click **Authorize** in Swagger and enter:
-
-```
-Bearer YOUR_TOKEN
-```
-
----
-
-### 4. Example Protected Routes
-
-* Create Job → `POST /jobs`
-* Apply to Job → `POST /applications`
-* View Jobs → `GET /jobs`
-
----
-
-## 🛠️ Running Locally
-
-### 1. Clone the repo
+### Backend
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kazi-connect.git
-cd kazi-connect/backend
-```
+cd backend
 
-### 2. Create virtual environment
-
-```bash
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+venv\Scripts\activate
+
+pip install -r requirements.txt
+
+uvicorn app.main:app --reload
 ```
 
-### 3. Install dependencies
+### Frontend
 
 ```bash
-pip install -r requirements.txt
+cd frontend
+
+npm install
+
+npm run dev
 ```
 
-### 4. Create `.env`
+---
+
+## 🔑 Environment Variables
+
+### Backend
 
 ```env
-MONGO_URL=your_mongodb_connection_string
+MONGO_URI=your_mongodb_connection_string
 DB_NAME=kazi_connect
 SECRET_KEY=your_secret_key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-### 5. Run server
+### Frontend
 
-```bash
-uvicorn main:app --reload
+```env
+VITE_API_URL=https://kazi-connect-backend.onrender.com
 ```
 
 ---
 
-## 🔐 Security Notes
+## 🚀 Deployment
 
-* Environment variables are used for sensitive data
-* JWT is used for authentication
-* Role-based access control enforced (employer vs job seeker)
-* MongoDB access restricted via Atlas security settings
+### Frontend
 
----
+* Vercel
 
-## 🚧 Future Improvements
+### Backend
 
-* Add rate limiting
-* Add logging and monitoring
-* Add email notifications
-* Add frontend (React)
-* Improve role-based authorization granularity
+* Render
+
+### Database
+
+* MongoDB Atlas
 
 ---
 
-## 👤 Author
+## 🚧 Roadmap
 
-**Jaspersen Ludigu**
+Upcoming features:
 
-* GitHub: https://github.com/Jaspersen21
+* Job closing workflow
+* Pagination UI
+* User profile page
+* M-Pesa integration
+* Email notifications
+* Employer analytics
+
+---
+
+## 👨‍💻 Author
+
+### Jaspersen Ludigu Chiruka
+
+GitHub: https://github.com/Jaspersen21
 
 ---
 
@@ -165,10 +295,11 @@ uvicorn main:app --reload
 
 This project demonstrates:
 
-* Real-world backend architecture
-* Authentication and authorization
-* Cloud deployment (Render + MongoDB Atlas)
-* REST API design and documentation
-* Async programming in Python
-
----
+* Full-stack web development
+* REST API design
+* JWT authentication
+* Role-based authorization
+* MongoDB Atlas integration
+* React Query state management
+* Cloud deployment
+* Real-world hiring workflow implementation
