@@ -19,8 +19,8 @@
 ## UI Polish
 - [ ] Toast notifications
 - [x] Empty states
-- [ ] Responsive design
+- [x] Responsive design
 
 ## Deployment
-- [ ] Deploy frontend
-- [ ] Configure production env
+- [x] Deploy frontend
+- [x] Configure production env
